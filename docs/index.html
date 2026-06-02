@@ -1100,11 +1100,24 @@ document.getElementById("btn-share").addEventListener("click", () => {
 // ── MAP INIT ──────────────────────────────────────────────────────────────────
 const map = L.map("map", { zoomControl: true }).setView(CLIENT_CONFIG.mapCenter, CLIENT_CONFIG.mapZoom);
 
-// Base — satellite imagery
-L.tileLayer(
+// Base — satellite imagery (Esri, with OSM fallback)
+const esriSat = L.tileLayer(
   "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
   { attribution: '&copy; <a href="https://www.esri.com/">Esri</a>', maxZoom: 19 }
-).addTo(map);
+);
+const osmBase = L.tileLayer(
+  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  { attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>', maxZoom: 19 }
+);
+// Try Esri first; if tiles fail to load within 8s, fall back to OSM
+esriSat.addTo(map);
+const _esriTest = new Image();
+_esriTest.onload = () => {};   // Esri works — keep it
+_esriTest.onerror = () => {    // Esri blocked — switch to OSM
+  map.removeLayer(esriSat);
+  osmBase.addTo(map);
+};
+_esriTest.src = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/4/5/4";
 
 // Overlay 1 — roads & highways (Esri Transportation reference layer)
 const roadOverlay = L.tileLayer(
@@ -1809,8 +1822,13 @@ async function loadData() {
 
   } catch (err) {
     console.error("Failed to load data:", err);
-    document.getElementById("property-list").innerHTML =
-      `<div style="padding:16px;color:#f77c6c;font-size:.8rem">Failed to load data.<br><small>${err.message}</small></div>`;
+    const errMsg = `<div style="padding:16px;color:#f77c6c;font-size:.8rem">⚠ Failed to load data.<br><small>${err.message}</small></div>`;
+    document.getElementById("property-list").innerHTML = errMsg;
+    // Also show error on map
+    document.getElementById("map").insertAdjacentHTML("afterbegin",
+      `<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.8);color:#f77c6c;padding:16px 24px;border-radius:8px;font-size:.85rem;z-index:9999;text-align:center">
+        ⚠ Map data failed to load<br><small style="color:#888">${err.message}</small>
+      </div>`);
   }
 }
 
