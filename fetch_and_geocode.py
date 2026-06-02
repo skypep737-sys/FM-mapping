@@ -130,25 +130,19 @@ def cache_key(row):
 
 
 def geocode_address(street, city, state, zip_code):
-    """Census Bureau geocoder — free, no API key required."""
+    """Nominatim (OpenStreetMap) geocoder — free, no API key required."""
     try:
+        query = ", ".join(filter(None, [street, city, state, zip_code]))
         resp = requests.get(
-            "https://geocoding.geo.census.gov/geocoder/locations/address",
-            params={
-                "street":    street,
-                "city":      city,
-                "state":     state,
-                "zip":       zip_code,
-                "benchmark": "2020",
-                "format":    "json",
-            },
+            "https://nominatim.openstreetmap.org/search",
+            params={"q": query, "format": "json", "limit": 1},
+            headers={"User-Agent": "FM-mapping-pipeline/1.0 (github-actions)"},
             timeout=15,
         )
         resp.raise_for_status()
-        matches = resp.json()["result"]["addressMatches"]
-        if matches:
-            coords = matches[0]["coordinates"]
-            return coords["y"], coords["x"]   # lat, lng
+        results = resp.json()
+        if results:
+            return float(results[0]["lat"]), float(results[0]["lon"])
     except Exception as e:
         print(f"    Geocode error ({street}, {city}): {e}")
     return None, None
@@ -178,7 +172,7 @@ def enrich_with_coords(rows, cache):
             cache[key] = [lat, lng]
             row["lat"], row["lng"] = lat, lng
             new_geocodes += 1
-            time.sleep(0.3)   # be polite to the Census API
+            time.sleep(1.1)   # Nominatim rate limit: 1 req/sec
 
     print(f"  {new_geocodes} new geocodes, {len(rows) - new_geocodes} from cache.")
     return rows
