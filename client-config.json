@@ -14,6 +14,7 @@
     "gross_sales_rank": "EOC",
     "deal_status":      "Deal Stage",
     "deal_notes":       "Latest Comment",
+    "photo_link":       "Photo link",
     "lat":              "Lat",
     "lng":              "Long"
   },
