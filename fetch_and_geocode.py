@@ -182,6 +182,9 @@ def enrich_with_coords(rows, cache):
 def main():
     print("Fetching Smartsheet…")
     sheet = fetch_sheet()
+    # Debug: print actual column names found in sheet so mismatches are visible
+    actual_cols = [c["title"] for c in sheet.get("columns", [])]
+    print(f"  Sheet columns: {actual_cols}")
     rows  = parse_rows(sheet)
     print(f"  {len(rows)} rows found.")
 
@@ -207,7 +210,12 @@ def main():
 
     if folder_id:
         print(f"Discovering survey sheets from folder {folder_id}…")
-        survey_ids = fetch_folder_sheet_ids(folder_id)
+        try:
+            survey_ids = fetch_folder_sheet_ids(folder_id)
+        except Exception as e:
+            print(f"  Warning: could not fetch folder {folder_id}: {e}")
+            print("  Skipping surveys — check SURVEY_FOLDER_ID secret.")
+            survey_ids = []
     elif survey_ids_raw:
         survey_ids = [s.strip() for s in survey_ids_raw.split(",") if s.strip()]
     else:
