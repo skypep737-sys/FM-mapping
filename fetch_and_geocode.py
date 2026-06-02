@@ -159,8 +159,9 @@ def enrich_with_coords(rows, cache):
             row["lng"] = float(lng_val)
             continue
         key = cache_key(row)
-        if key in cache:
-            row["lat"], row["lng"] = cache[key]
+        cached = cache.get(key)
+        if cached and cached[0] and cached[1]:   # skip null cache entries
+            row["lat"], row["lng"] = cached
         else:
             print(f"  Geocoding: {row.get('street')}, {row.get('city')}, {row.get('state')}")
             lat, lng = geocode_address(
