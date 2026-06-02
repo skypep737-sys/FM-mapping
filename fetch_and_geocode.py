@@ -157,6 +157,13 @@ def geocode_address(street, city, state, zip_code):
 def enrich_with_coords(rows, cache):
     new_geocodes = 0
     for row in rows:
+        # Use pre-populated lat/lng from the sheet if available
+        lat_val = str(row.get("lat") or "").strip()
+        lng_val = str(row.get("lng") or "").strip()
+        if lat_val and lng_val and lat_val not in ("", "None") and lng_val not in ("", "None"):
+            row["lat"] = float(lat_val)
+            row["lng"] = float(lng_val)
+            continue
         key = cache_key(row)
         if key in cache:
             row["lat"], row["lng"] = cache[key]
