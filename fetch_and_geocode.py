@@ -1,4 +1,5 @@
 import os
+import re
 import json
 import time
 import requests
@@ -129,20 +130,41 @@ def cache_key(row):
     ]).lower()
 
 
+def _nominatim_search(query):
+    resp = requests.get(
+        "https://nominatim.openstreetmap.org/search",
+        params={"q": query, "format": "json", "limit": 1},
+        headers={"User-Agent": "FM-mapping-pipeline/1.0 (github-actions)"},
+        timeout=15,
+    )
+    resp.raise_for_status()
+    return resp.json()
+
+
 def geocode_address(street, city, state, zip_code):
-    """Nominatim (OpenStreetMap) geocoder — free, no API key required."""
+    """Nominatim geocoder with fallback for complex shopping-center addresses."""
     try:
+        # First attempt: full address as-is
         query = ", ".join(filter(None, [street, city, state, zip_code]))
-        resp = requests.get(
-            "https://nominatim.openstreetmap.org/search",
-            params={"q": query, "format": "json", "limit": 1},
-            headers={"User-Agent": "FM-mapping-pipeline/1.0 (github-actions)"},
-            timeout=15,
-        )
-        resp.raise_for_status()
-        results = resp.json()
+        results = _nominatim_search(query)
         if results:
             return float(results[0]["lat"]), float(results[0]["lon"])
+
+        # Fallback: strip leading non-numeric center name and trailing suite info
+        m = re.search(r"\d+\s+\w", street)
+        if m:
+            clean = street[m.start():]
+            # Remove suite/space suffixes
+            clean = re.sub(
+                r",?\s*(suite|ste|space|sp\.?|#)\s*\S+.*$", "", clean,
+                flags=re.IGNORECASE,
+            ).strip()
+            fallback = ", ".join(filter(None, [clean, city, state, zip_code]))
+            if fallback != query:
+                time.sleep(1.1)
+                results = _nominatim_search(fallback)
+                if results:
+                    return float(results[0]["lat"]), float(results[0]["lon"])
     except Exception as e:
         print(f"    Geocode error ({street}, {city}): {e}")
     return None, None
