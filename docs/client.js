@@ -22,10 +22,10 @@ const CLIENT_CONFIG = {
   // brandLetter : 1-2 character initials shown in the header shield badge
   // primaryColor: hex color used for active states, pins, and accents
   // pageTitle   : browser tab / window title
-  appName:      "Salvation Army",
-  brandLetter:  "S",
+  appName:      "Fannie May",
+  brandLetter:  "FM",
   primaryColor: "#EE2A24",
-  pageTitle:    "Salvation Army — Property Map",
+  pageTitle:    "Fannie May - Portfolio Map",
 
   // ── Deal Types ───────────────────────────────────────────────────────────
   // Each entry must match a value in your Smartsheet "Deal Type" column.
@@ -35,6 +35,8 @@ const CLIENT_CONFIG = {
   dealTypes: [
     { key: "Renewal", label: "Renewal", color: "#f97316" },
     { key: "Newlo",   label: "Newlo",   color: "#eab308" },
+    { key: "Closed",   label: "Closed",   color: "#f85149" }, 
+    { key: "Renovations",   label: "Renovations",   color: "#3fb950" },
   ],
 
   // ── Map Defaults ─────────────────────────────────────────────────────────
