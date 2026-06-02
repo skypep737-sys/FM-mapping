@@ -1,8 +1,8 @@
 {
-  "_readme": "Edit column names to exactly match your Smartsheet column headers. Keys on the left are internal field names — do not change them. Values on the right are the Smartsheet column titles — change these to match your sheet.",
+  "_readme": "Edit column names to exactly match your Smartsheet column headers. Keys on the LEFT are internal field names used by the app — do NOT change them. Values on the RIGHT are your Smartsheet column titles — change these to match your sheet exactly.",
 
   "column_map": {
-    "site_#":          "SITE ID",
+    "site_id":          "SITE ID",
     "store_name":       "Store Name",
     "deal_type":        "Deal Type",
     "full_address":     "Full Address",
@@ -10,10 +10,10 @@
     "city":             "City",
     "state":            "State",
     "zip":              "Zip",
-    "LEX":             "Lease Expiration",
-    "EOC":             "End of Control",
-    "Deal Stage":      "Deal Status",
-    "Latest Comment":       "Latest Comment"
+    "drumline":         "Lease Expiration",
+    "gross_sales_rank": "End of Control",
+    "deal_status":      "Deal Status",
+    "deal_notes":       "Latest Comment"
   },
 
   "survey_column_map": {

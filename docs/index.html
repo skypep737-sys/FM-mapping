@@ -910,8 +910,8 @@
             <th data-col="full_address">Address <span class="sort-arrow">↕</span></th>
             <th data-col="deal_type">Deal Type <span class="sort-arrow">↕</span></th>
             <th data-col="deal_status">Deal Status <span class="sort-arrow">↕</span></th>
-            <th data-col="drumline">Drumline <span class="sort-arrow">↕</span></th>
-            <th data-col="gross_sales_rank">Sales Rank <span class="sort-arrow">↕</span></th>
+            <th data-col="drumline">Lease Exp. <span class="sort-arrow">↕</span></th>
+            <th data-col="gross_sales_rank">End of Control <span class="sort-arrow">↕</span></th>
             <th data-col="deal_notes">Latest Notes <span class="sort-arrow">↕</span></th>
           </tr>
         </thead>
@@ -1264,7 +1264,7 @@ function renderList(props) {
     card.innerHTML = `
       <div class="prop-name">${p.store_name||"Unnamed"}</div>
       <div class="prop-meta">${p.full_address||""}</div>
-      <div class="prop-meta">Sales Rank: ${p.gross_sales_rank||"—"}</div>
+      <div class="prop-meta">EOC: ${p.gross_sales_rank||"—"}</div>
       ${badge(p.deal_type)}`;
     card.addEventListener("click", () => selectProperty(p.site_id));
     list.appendChild(card);
@@ -1787,7 +1787,7 @@ async function loadData() {
         <div class="popup-title">${p.store_name||"Unnamed"}</div>
         <div class="popup-row">Address &nbsp;<span>${p.full_address||"—"}</span></div>
         <div class="popup-row">Deal Type &nbsp;<span>${p.deal_type||"—"}</span></div>
-        <div class="popup-row">Drumline &nbsp;<span>${p.drumline||"—"}</span></div>
+        <div class="popup-row">Lease Exp. &nbsp;<span>${p.drumline||"—"}</span></div>
         <div class="popup-row">Deal Notes &nbsp;<span>${p.deal_notes||"—"}</span></div>
       `);
       marker.on("click", () => {
