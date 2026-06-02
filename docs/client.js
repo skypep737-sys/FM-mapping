@@ -33,10 +33,10 @@ const CLIENT_CONFIG = {
   //   label → display name shown in the UI
   //   color → hex color for map pins, chips, and badges
   dealTypes: [
-    { key: "Renewal", label: "Renewal", color: "#f97316" },
-    { key: "Newlo",   label: "Newlo",   color: "#eab308" },
-    { key: "Closed",   label: "Closed",   color: "#f85149" }, 
-    { key: "Renovations",   label: "Renovations",   color: "#3fb950" },
+    { key: "Renewal",     label: "Renewal",     color: "#f97316" },
+    { key: "Closing",     label: "Closing",     color: "#f85149" },
+    { key: "Renovations", label: "Renovations", color: "#3fb950" },
+    { key: "Relo",        label: "Relo",        color: "#a78bfa" },
   ],
 
   // ── Map Defaults ─────────────────────────────────────────────────────────
@@ -49,7 +49,7 @@ const CLIENT_CONFIG = {
   //   Midwest          : [41.8, -87.6], zoom 7
   //   West Coast       : [37.3, -122],  zoom 6
   //   Single city      : [lat, lng],    zoom 12
-  mapCenter: [37.5, -96],
-  mapZoom:   4,
+  mapCenter: [41.5, -87.8],
+  mapZoom:   8,
 
 };
