@@ -2,7 +2,7 @@
   "_readme": "Edit column names to exactly match your Smartsheet column headers. Keys on the LEFT are internal field names used by the app — do NOT change them. Values on the RIGHT are your Smartsheet column titles — change these to match your sheet exactly.",
 
   "column_map": {
-    "site_id":          "SITE ID",
+    "site_id":          "Site_ID",
     "store_name":       "Store Name",
     "deal_type":        "Deal Type",
     "full_address":     "Full Address",
